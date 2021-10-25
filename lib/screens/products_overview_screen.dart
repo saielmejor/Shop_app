@@ -12,5 +12,5 @@ class ProductOverviewScreen extends StatelessWidget {
       body:
           ProductGridView(), //products grid is created in the products_grid file
     );
-  }
+  } 
 }

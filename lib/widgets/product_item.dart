@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-
+//import the provider.dart file
+import 'package:provider/provider.dart';
 import '../screens/product_detail_screen.dart';
+
+import '../providers/product.dart';
 
 class ProductItem extends StatelessWidget {
 //add property
-  final String id;
-  final String title;
-  final String imageUrl;
+  // final String id;
+  // final String title;
+  // final String imageUrl;
 
-  ProductItem(this.id, this.title, this.imageUrl);
+  // ProductItem(this.id, this.title, this.imageUrl);
 
   @override
   Widget build(BuildContext context) {
+    final product =
+        Provider.of<Product>(context); // interested on a single product
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -19,12 +24,12 @@ class ProductItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               ProductDetailScreen.routeName,
-              arguments: id, // pushNamed routeName with argument as id
+              arguments: product.id, // pushNamed routeName with argument as id
               //can be done because it is define as a property
             ); // add product-detail
           },
           child: Image.network(
-            imageUrl,
+            product.imageUrl,
             fit: BoxFit.cover, //fit everything in the bvox
           ),
         ),
@@ -32,11 +37,17 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
             backgroundColor: Colors.black87, // add a background color
             leading: IconButton(
-              icon: Icon(Icons.favorite),
-              onPressed: () {},
+              icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                //favorite will be shown if not it will be empty
+              ),
+              onPressed: () {
+                product
+                    .toggleFavoriteStatus(); // calls the toggleFavoriteStatus method
+              },
               color: Theme.of(context).accentColor,
             ),
-            title: Text(title, textAlign: TextAlign.center),
+            title: Text(product.title, textAlign: TextAlign.center),
             trailing: IconButton(
               icon: Icon(
                 Icons.shopping_cart,
