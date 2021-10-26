@@ -15,8 +15,8 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product =
-        Provider.of<Product>(context); // interested on a single product
+    final product = Provider.of<Product>(context,
+        listen: false); // interested on a single product
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -36,17 +36,20 @@ class ProductItem extends StatelessWidget {
         //add a footer to displa y text in the bottom of the picture
         footer: GridTileBar(
             backgroundColor: Colors.black87, // add a background color
-            leading: IconButton(
-              icon: Icon(
-                product.isFavorite ? Icons.favorite : Icons.favorite_border,
-                //favorite will be shown if not it will be empty
-              ),
-              onPressed: () {
-                product
-                    .toggleFavoriteStatus(); // calls the toggleFavoriteStatus method
-              },
-              color: Theme.of(context).accentColor,
-            ),
+            leading: Consumer<Product>(
+                builder: (ctx, product, child) => IconButton(
+                      icon: Icon(
+                        product.isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        //favorite will be shown if not it will be empty
+                      ),
+                      onPressed: () {
+                        product
+                            .toggleFavoriteStatus(); // calls the toggleFavoriteStatus method
+                      },
+                      color: Theme.of(context).accentColor,
+                    )),
             title: Text(product.title, textAlign: TextAlign.center),
             trailing: IconButton(
               icon: Icon(

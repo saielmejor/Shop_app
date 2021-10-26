@@ -15,9 +15,10 @@ class ProductGridView extends StatelessWidget {
     return GridView.builder(
         padding: const EdgeInsets.all(10.0), //add const to  not make rebuild
         itemCount: products.length, //load certain amount of products
-        itemBuilder: (ctx, i) => ChangeNotifierProvider(
-          create: (c) => products[i],//creates or builds a single product from the database
-              child: ProductItem (
+        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+              value: products[
+                  i], //creates or builds a single product from the database
+              child: ProductItem(
                   // products[i].id, products[i].title, products[i].imageUrl
                   ),
             ),
