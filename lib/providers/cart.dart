@@ -22,6 +22,12 @@ class Cart with ChangeNotifier {
     return {..._items}; // use spread operator to get duplicate of items
   }
 
+  //get item count
+  int get itemCount {
+    // gets the amount of products
+    return _items.length;
+  }
+
   void addItem(
     String productId,
     double price,

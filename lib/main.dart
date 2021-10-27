@@ -4,6 +4,7 @@ import 'package:shop_app/providers/product.dart';
 import './screens/products_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products_provider.dart';
+import './providers/cart.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,10 +14,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => Products()),
+        ChangeNotifierProvider(
+          create: (ctx) => Cart(),
+        ),
+      ],
       // add the change notifier provider this will rebuild widget in the child whenever there is a change
       //add builder of the instance product() using create
-      create: (ctx) => Products(),
+
       child: MaterialApp(
           title: 'My Shop',
           theme: ThemeData(

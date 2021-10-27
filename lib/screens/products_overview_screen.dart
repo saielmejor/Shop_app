@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/products_grid.dart';
 import '../providers/products_provider.dart ';
+import '../widgets/badge.dart';
 
 enum FilterOptions { Favorites, All }
 
@@ -35,6 +36,14 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 value: FilterOptions.Favorites),
             PopupMenuItem(child: Text('Show All'), value: FilterOptions.All),
           ],
+        ),
+        //create a badge
+        Badge(
+          child: IconButton(
+            icon: Icon(
+              Icons.shopping_cart,
+            ),
+          ),
         ),
       ]),
       body: ProductGridView(
