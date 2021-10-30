@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../widgets/products_grid.dart';
 import '../providers/products_provider.dart ';
 import '../widgets/badge.dart';
+import '../providers/cart.dart';
+import '../screens/cart_screen.dart';
 
 enum FilterOptions { Favorites, All }
 
@@ -37,14 +39,24 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
             PopupMenuItem(child: Text('Show All'), value: FilterOptions.All),
           ],
         ),
-        //create a badge
-        Badge(
+        //create a badge and set up a listener with cart
+        Consumer<Cart>(
+          builder: (_, cart, ch) => Badge(
+            child: ch,
+            value: cart.itemCount.toString(),
+          ),
           child: IconButton(
+            //separate child so it does not rebuild every single time
             icon: Icon(
               Icons.shopping_cart,
             ),
+            onPressed: () {
+              Navigator.of(context).pushNamed(CartScreen.routeName);
+              // using the navigator will allow you to go to another screen when
+              //the user press on shopping Cart
+            },
           ),
-        ),
+        )
       ]),
       body: ProductGridView(
           _showOnlyFavorites), //products grid is created in the products_grid file

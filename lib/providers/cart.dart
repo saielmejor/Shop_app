@@ -16,7 +16,8 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem> _items; // map has a key and a values
+  Map<String, CartItem> _items =
+      {}; // map has a key and a values and define it as empty map
   Map<String, CartItem> get items {
     //use getter to get the items
     return {..._items}; // use spread operator to get duplicate of items
@@ -24,8 +25,18 @@ class Cart with ChangeNotifier {
 
   //get item count
   int get itemCount {
-    // gets the amount of products
+    // gets the amount of products however _items is undefine
+    // you need to create a if statement if the items is null
     return _items.length;
+  }
+
+// this is a getter to get the total amount
+  double get totalAmount {
+    var total = 0.0;
+    _items.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity;
+    });
+    return total;
   }
 
   void addItem(
@@ -56,5 +67,6 @@ class Cart with ChangeNotifier {
             quantity: 1),
       );
     }
+    notifyListeners();
   }
 }
