@@ -7,6 +7,7 @@ import './screens/cart_screen.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products_provider.dart';
 import './providers/cart.dart';
+import './providers/orders.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => Orders(),
+        )
       ],
       // add the change notifier provider this will rebuild widget in the child whenever there is a change
       //add builder of the instance product() using create
