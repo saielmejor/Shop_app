@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/cart.dart'
     show Cart; // this means we are only interested with Cart Class
 import '../widgets/cart_item.dart';
+import '../providers/orders.dart';
+import '../screens/orders_screen.dart';
 
 class CartScreen extends StatelessWidget {
   //create a routeName to access cart Scree n
@@ -41,7 +43,11 @@ class CartScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false).addOrder(
+                          cart.items.values.toList(), cart.totalAmount);
+                      cart.clear();
+                    },
                     child: Text('Order Now'),
                     textColor: Theme.of(context).primaryColor,
                   )
@@ -55,7 +61,8 @@ class CartScreen extends StatelessWidget {
                   itemCount: cart.items.length,
                   itemBuilder: (ctx, i) => CartItem(
                       cart.items.values.toList()[i].id,
-                      cart.items.keys.toList()[i], //pass in the key for the item
+                      cart.items.keys
+                          .toList()[i], //pass in the key for the item
                       cart.items.values.toList()[i].price,
                       cart.items.values.toList()[i].quantity,
                       cart.items.values.toList()[i].title)))

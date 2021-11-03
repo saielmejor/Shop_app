@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../providers/orders.dart' as ord;
 import 'package:intl/intl.dart';
 
-
 class OrderItem extends StatelessWidget {
   final ord.OrderItem order;
   OrderItem(this.order);
@@ -15,7 +14,7 @@ class OrderItem extends StatelessWidget {
             title: Text('\$${order.amount}'),
             //format order.datetime
             subtitle: Text(
-              DateFormat('dd MM yyyy hh:mm').format(order.dateTime),
+              DateFormat('dd/MM/yyyy hh:mm').format(order.dateTime),
             ),
             trailing: IconButton(
               icon: Icon(Icons.expand_more),
