@@ -67,7 +67,16 @@ class Products with ChangeNotifier {
     // this will returns if the prod.id matches with argument id
   }
 
-  void addProduct() {
+//expectation is to get a product  and generate an id
+  void addProduct(Product product) {
+    final newProduct = Product(
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      id: DateTime.now().toString(),
+    );
+    _items.add(newProduct);
     //_items.add(value);  dont add the item.add(value)
     notifyListeners();
   }

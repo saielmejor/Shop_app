@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../providers/product.dart';
+import '../providers/products_provider.dart';
 
 //use stateful widget for managing all user input and this is better
 //than using provider package
@@ -18,12 +20,41 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _form = GlobalKey<FormState>();
   var _editedProduct =
       Product(id: null, title: ' ', price: 0, description: ' ', imageUrl: '');
+
+  //add default values in the text fiedl
+
+  var _initValues = {
+    'title': ' ',
+    'description': ' ',
+    'price': ' ',
+    'imageUrl': ' ',
+  }; 
+
   //creates an empty object
+
+  var _isInit = true; // add this so didependencies does not run all the time
   @override
   //add a listener to control imageurl focus node
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
+  }
+
+  //you need to add a didDependencies change
+  //to check if the data has change from other sources
+  //runs before the build
+  @override
+  void didChangDependencies() {
+    if (_isInit) {
+      //extract the product route
+
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      //use providers to find the product after extracting the Id
+      _editedProduct =
+          Provider.of<Products>(context, listen: false).findById(productId);
+    }
+    _isInit;
+    super.didChangeDependencies();
   }
 
   @override
@@ -40,6 +71,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void _updateImageUrl() {
     if (_imageUrlFocusNode.hasFocus) {
+      //add validation for the image url
+      if ((!_imageUrlController.text.startsWith('https') &&
+              !_imageUrlController.text.startsWith('http')) ||
+          (!_imageUrlController.text.endsWith('.jpg') &&
+              !_imageUrlController.text.endsWith('.jpeg') &&
+              !_imageUrlController.text.endsWith('.png'))) {
+        return;
+      }
+
       // if the image Url loses focus it will still show the preview of the image url
       //as long as it has the image url
       setState(() {});
@@ -53,10 +93,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return; // returns nothing if its false
     }
     _form.currentState.save();
-    print(_editedProduct.title);
-    print(_editedProduct.description);
-    print(_editedProduct.price);
-    print(_editedProduct.imageUrl);
+    //add a save for new products
+    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    Navigator.of(context)
+        .pop(); //pops oout from the screen to the previous page
   }
 
   @override
@@ -182,12 +222,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           onFieldSubmitted: (_) {
                             _saveForm();
                           },
-                          validator:(value){ 
-                            if(value.isEmpty){ 
-                              return ' Please enter an image Url '; 
-                            }if(!value.startsWith('http') && !value.startsWith('https')){ 
-                              return ' Please enter a valid Url'; 
-                            }return null; 
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return ' Please enter an image Url ';
+                            }
+                            if (!value.startsWith('http') &&
+                                !value.startsWith('https')) {
+                              return ' Please enter a valid Url';
+                            }
+                            if (!value.endsWith('.png') &&
+                                !value.endsWith('.jpg') &&
+                                !value.endsWith('.jpeg')) {
+                              return ' Please enter a valid image url ';
+                            }
+
+                            return null;
                           },
 
                           // add this to show preview of image
