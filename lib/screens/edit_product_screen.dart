@@ -22,13 +22,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
       Product(id: null, title: ' ', price: 0, description: ' ', imageUrl: '');
 
   //add default values in the text fiedl
-
+//change the values to empty
   var _initValues = {
     'title': ' ',
     'description': ' ',
     'price': ' ',
     'imageUrl': ' ',
-  }; 
+  };
+
+// create another variable for default values
 
   //creates an empty object
 
@@ -39,21 +41,34 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
-
+ 
   //you need to add a didDependencies change
   //to check if the data has change from other sources
   //runs before the build
   @override
-  void didChangDependencies() {
+  void didChangeDependencies() {
     if (_isInit) {
-      //extract the product route
+      //extract the product id route
 
       final productId = ModalRoute.of(context).settings.arguments as String;
       //use providers to find the product after extracting the Id
-      _editedProduct =
-          Provider.of<Products>(context, listen: false).findById(productId);
+      //loading the product
+      if (productId != null) {
+        _editedProduct =
+            Provider.of<Products>(context, listen: false).findById(productId);
+        //we need to load default value
+        _initValues = {
+          'title': _editedProduct.title,
+          'description': _editedProduct.description,
+          'price': _editedProduct.price.toString(),
+          //'imageUrl': _editedProduct.imageUrl,
+          'imageUrl': '',
+        };
+        _imageUrlController.text = _editedProduct.imageUrl;
+      }
     }
-    _isInit;
+
+    _isInit = false;
     super.didChangeDependencies();
   }
 
@@ -94,7 +109,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
     _form.currentState.save();
     //add a save for new products
-    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+
+    if (_editedProduct != null) {
+      Provider.of<Products>(context, listen: false)
+          .updateProduct(_editedProduct.id, _editedProduct);
+    } else {
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    }
+
     Navigator.of(context)
         .pop(); //pops oout from the screen to the previous page
   }
@@ -116,6 +138,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             child: ListView(
               children: <Widget>[
                 TextFormField(
+                  initialValue: _initValues['title'],
                   decoration: InputDecoration(labelText: 'Title'),
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) {
@@ -129,15 +152,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                   onSaved: (value) {
                     _editedProduct = Product(
-                        title: value,
-                        price: _editedProduct.price,
-                        description: _editedProduct.description,
-                        imageUrl: _editedProduct.imageUrl,
-                        id: null);
+                      title: value,
+                      price: _editedProduct.price,
+                      description: _editedProduct.description,
+                      imageUrl: _editedProduct.imageUrl,
+                      id: _editedProduct.id,
+                      isFavorite: _editedProduct.isFavorite,
+                    );
                   },
                   // this is the enter button in the soft keyboard
                 ),
                 TextFormField(
+                  initialValue: _initValues['price'],
                   decoration: InputDecoration(labelText: 'Price'),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
@@ -159,15 +185,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                   onSaved: (value) {
                     _editedProduct = Product(
-                        title: _editedProduct.title,
-                        price: double.parse(value),
-                        description: _editedProduct.description,
-                        imageUrl: _editedProduct.imageUrl,
-                        id: null);
+                      title: _editedProduct.title,
+                      price: double.parse(value),
+                      description: _editedProduct.description,
+                      imageUrl: _editedProduct.imageUrl,
+                      id: _editedProduct.id,
+                      isFavorite: _editedProduct.isFavorite,
+                    );
                   },
                   // you can change th the type of soft keyboard to numbers
                 ),
                 TextFormField(
+                  initialValue: _initValues['description'],
                   decoration: InputDecoration(labelText: 'Description'),
                   maxLines: 3, // allows a certain amount of text line
                   textInputAction: TextInputAction.next,
@@ -184,11 +213,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                   onSaved: (value) {
                     _editedProduct = Product(
-                        title: _editedProduct.title,
-                        price: _editedProduct.price,
-                        description: value,
-                        imageUrl: _editedProduct.imageUrl,
-                        id: null);
+                      title: _editedProduct.title,
+                      price: _editedProduct.price,
+                      description: value,
+                      imageUrl: _editedProduct.imageUrl,
+                      id: _editedProduct.id,
+                      isFavorite: _editedProduct.isFavorite,
+                    );
                   },
 
                   // you can change th the type of soft keyboard to numbers
@@ -245,11 +276,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           },
                           onSaved: (value) {
                             _editedProduct = Product(
-                                title: _editedProduct.title,
-                                price: _editedProduct.price,
-                                description: _editedProduct.description,
-                                imageUrl: value,
-                                id: null);
+                              title: _editedProduct.title,
+                              price: _editedProduct.price,
+                              description: _editedProduct.description,
+                              imageUrl: value,
+                              id: _editedProduct.id,
+                              isFavorite: _editedProduct.isFavorite,
+                            );
                           },
                           focusNode:
                               _imageUrlFocusNode, // this will keep the focus to imageUrl

@@ -23,7 +23,7 @@ class UserProductItem extends StatelessWidget {
               icon: Icon(Icons.edit),
               onPressed: () {
                 Navigator.of(context)
-                    .pushNamed(EditProductScreen.routeName, arguments: id);
+                    .pushNamed(EditProductScreen.routeName, arguments:id);
                 //you use arguments in navigator to search for the correct product
               },
               color: Theme.of(context).primaryColor,
