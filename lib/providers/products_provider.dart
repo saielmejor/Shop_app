@@ -1,5 +1,7 @@
+import 'dart:html';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -69,6 +71,12 @@ class Products with ChangeNotifier {
 
 //expectation is to get a product  and generate an id
   void addProduct(Product product) {
+    //send http  request and reads the database
+    const url =
+        'https://shop-app-ff601-default-rtdb.firebaseio.com/products.json';
+    http.post(Uri.parse('https://shop-app-ff601-default-rtdb.firebaseio.com/products.json'), body: json.encode({
+      
+    })); // sends a post request to url
     final newProduct = Product(
       title: product.title,
       description: product.description,
@@ -90,5 +98,10 @@ class Products with ChangeNotifier {
     } else {
       print('....');
     }
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((prod) => prod.id == id);
+    notifyListeners();
   }
 }
