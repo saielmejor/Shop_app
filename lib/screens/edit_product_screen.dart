@@ -36,38 +36,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   var _isInit = true; // add this so didependencies does not run all the time
   @override
-  //add a listener to control imageurl focus node
-  void initState() {
-    _imageUrlFocusNode.addListener(_updateImageUrl);
-    super.initState();
-  }
- 
-  //you need to add a didDependencies change
-  //to check if the data has change from other sources
-  //runs before the build
-  @override
   void didChangeDependencies() {
     if (_isInit) {
-      //extract the product id route
-
       final productId = ModalRoute.of(context).settings.arguments as String;
-      //use providers to find the product after extracting the Id
-      //loading the product
       if (productId != null) {
         _editedProduct =
             Provider.of<Products>(context, listen: false).findById(productId);
-        //we need to load default value
         _initValues = {
           'title': _editedProduct.title,
           'description': _editedProduct.description,
           'price': _editedProduct.price.toString(),
-          //'imageUrl': _editedProduct.imageUrl,
+          // 'imageUrl': _editedProduct.imageUrl,
           'imageUrl': '',
         };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
     }
-
     _isInit = false;
     super.didChangeDependencies();
   }
@@ -110,13 +94,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _form.currentState.save();
     //add a save for new products
 
-    if (_editedProduct != null) {
+    if (_editedProduct.id != null) {
       Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
     } else {
       Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
     }
-
+    print('added product');
     Navigator.of(context)
         .pop(); //pops oout from the screen to the previous page
   }
