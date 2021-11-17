@@ -69,8 +69,12 @@ class Products with ChangeNotifier {
   }
 
 //expectation is to get a product  and generate an id
-  void addProduct(Product product) {
-    http.post(
+  //retruns nothing it returns void
+  // we only care that future gets a type and it is a void because it wont return anything
+  Future<void> addProduct(Product product) {
+    // use return to complete the future syntax
+    return http
+        .post(
       Uri.parse(
           "https://shop-app-ff601-default-rtdb.firebaseio.com/products_provider.json"),
       body: json.encode(
@@ -82,18 +86,24 @@ class Products with ChangeNotifier {
           'isFavorite': product.isFavorite,
         },
       ),
-    );
-    final newProduct = Product(
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-      id: DateTime.now().toString(),
-    );
-    _items.add(newProduct);
-    //_items.add(value);  dont add the item.add(value)
-    notifyListeners();
+    )
+        .then((response) {
+      print(json.decode(response.body));
+      //register a function once the response is finished
+      final newProduct = Product(
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        id: json
+            .decode(response.body)['name'], // gets the name key from firebase
+      );
+      _items.add(newProduct);
+      //_items.add(value);  dont add the item.add(value)
+      notifyListeners();
+    });
   }
+
   //send http  request and reads the database
 
   // sends a post request to url
