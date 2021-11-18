@@ -86,7 +86,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     //add logic to save the form if the user input is correct
     final isValid = _form.currentState.validate();
     if (!isValid) {
@@ -106,18 +106,40 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
       Navigator.of(context).pop();
     } else {
-      Provider.of<Products>(context, listen: false)
-          .addProduct(_editedProduct)
-          .then((_) {
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (error) {
+        await showDialog(
+          // returns a future catch by catch error
+          context: context,
+          builder: (ctx) => AlertDialog(
+              title: Text('An error occurred'),
+              content: Text('Something went wrong'),
+              //add actions flat button
+              actions: <Widget>[
+                FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    })
+              ]),
+        );
+      }
+      // add catch error before the then method
+      // because it will find any errors before then method is executed
+// use finally which it will always run no matter if it
+//succeeded or failed
+       finally {
         setState(() {
           _isLoading = false; // sets it to false once we are done with it
         });
         Navigator.of(context).pop();
-      });
-      //you need to accept a value thats why you use (_)
+        //you need to accept a value thats why you use (_)
+      }
+      print('added product');
+      //pops oout from the screen to the previous page
     }
-    print('added product');
-    //pops oout from the screen to the previous page
   }
 
   @override

@@ -68,26 +68,36 @@ class Products with ChangeNotifier {
     // this will returns if the prod.id matches with argument id
   }
 
+// add a fetch and set data products
+  Future<void> fetchAndSetProducts() async {
+    try {
+      final response = await http.get(Uri.parse(
+          "https://shop-app-ff601-default-rtdb.firebaseio.com/products_provider.json"));
+      print(response);
+    } catch (error) {
+      throw (error);
+    }
+  }
+
 //expectation is to get a product  and generate an id
   //retruns nothing it returns void
   // we only care that future gets a type and it is a void because it wont return anything
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
     // use return to complete the future syntax
-    return http
-        .post(
-      Uri.parse(
-          "https://shop-app-ff601-default-rtdb.firebaseio.com/products_provider.json"),
-      body: json.encode(
-        {
-          'title': product.title,
-          'description': product.description,
-          'imageUrl': product.imageUrl,
-          'price': product.price,
-          'isFavorite': product.isFavorite,
-        },
-      ),
-    )
-        .then((response) {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            "https://shop-app-ff601-default-rtdb.firebaseio.com/products_provider.json"),
+        body: json.encode(
+          {
+            'title': product.title,
+            'description': product.description,
+            'imageUrl': product.imageUrl,
+            'price': product.price,
+            'isFavorite': product.isFavorite,
+          },
+        ),
+      );
       print(json.decode(response.body));
       //register a function once the response is finished
       final newProduct = Product(
@@ -101,7 +111,12 @@ class Products with ChangeNotifier {
       _items.add(newProduct);
       //_items.add(value);  dont add the item.add(value)
       notifyListeners();
-    });
+    } catch (error) {
+      print(error);
+      throw (error);
+    }
+
+    // add catch error at the end so it checks if there are error before and after the then method.
   }
 
   //send http  request and reads the database

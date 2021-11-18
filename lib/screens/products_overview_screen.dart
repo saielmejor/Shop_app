@@ -6,12 +6,19 @@ import '../widgets/badge.dart';
 import '../providers/cart.dart';
 import '../screens/cart_screen.dart';
 import '../widgets/app_drawer.dart';
+import '../providers/products_provider.dart';
 
 enum FilterOptions { Favorites, All }
 
 class ProductOverviewScreen extends StatefulWidget {
   @override
   _ProductOverviewScreenState createState() => _ProductOverviewScreenState();
+}
+//add initState to fetch products 
+@override 
+void initState() { 
+  Provider.of<Products>
+  super.initState() ;
 }
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
