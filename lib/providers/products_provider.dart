@@ -68,13 +68,13 @@ class Products with ChangeNotifier {
     // this will returns if the prod.id matches with argument id
   }
 
-// add a fetch and set data products
+// add a fetch and set data products from the server 
   Future<void> fetchAndSetProducts() async {
     try {
       final response = await http.get(Uri.parse(
           "https://shop-app-ff601-default-rtdb.firebaseio.com/products_provider.json"));
-      print(response);
-    } catch (error) {
+      print(json.decode(response.body));
+    } catch (error) { 
       throw (error);
     }
   }
