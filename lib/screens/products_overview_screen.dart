@@ -17,6 +17,7 @@ class ProductOverviewScreen extends StatefulWidget {
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showOnlyFavorites = false;
   var _isInit = true;
+  var _isLoading = false;
 //add initState to fetch products
   @override
   void initState() {
@@ -31,7 +32,16 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      Provider.of<Products>(context).fetchAndSetProducts();
+      setState(() {
+     _isLoading = true; // sets loading spinner to true when is fetching    
+      });
+     
+      Provider.of<Products>(context).fetchAndSetProducts().then((_) {
+        setState(() {
+            _isLoading = false; // use setState so UI gets updated 
+        });
+      
+      });
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -83,7 +93,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(), //import app drawer
-      body: ProductGridView(
+      body: _isLoading ?
+       Center (child: CircularProgressIndicator() ,)
+        :ProductGridView(
           _showOnlyFavorites), //products grid is created in the products_grid file
     );
   }

@@ -99,12 +99,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     });
 
     if (_editedProduct.id != null) {
-      Provider.of<Products>(context, listen: false)
+     await Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
-      setState(() {
-        _isLoading = false; // sets it to false once we are done with it
-      });
-      Navigator.of(context).pop();
     } else {
       try {
         await Provider.of<Products>(context, listen: false)
@@ -130,17 +126,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
       // because it will find any errors before then method is executed
 // use finally which it will always run no matter if it
 //succeeded or failed
-       finally {
-        setState(() {
-          _isLoading = false; // sets it to false once we are done with it
-        });
-        Navigator.of(context).pop();
-        //you need to accept a value thats why you use (_)
-      }
+      //  finally {
+      //   setState(() {
+      //     _isLoading = false; // sets it to false once we are done with it
+      //   });
+      //   Navigator.of(context).pop();
+      //   //you need to accept a value thats why you use (_)
+      // }
+      //this will load to false once all the async functions were executed 
+       
+  }
+  setState(() {
+        _isLoading = false; // sets it to false once we are done with it
+      });
+      Navigator.of(context).pop();
       print('added product');
       //pops oout from the screen to the previous page
     }
-  }
 
   @override
   Widget build(BuildContext context) {
