@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../models/http_exception.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -156,8 +158,21 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url =
+        "https://shop-app-ff601-default-rtdb.firebaseio.com/products_provider/$id.json";
+    final existingProductIndex = _items.indexWhere((prod) =>
+        prod.id == id); //gets the index of the product that you want to remvoe
+    var existingProduct = _items[existingProductIndex]; //creates apointer
+    _items.removeAt(existingProductIndex);
+    notifyListeners();
+    final response = await http.delete(Uri.parse(url));
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException('Could not delete product.');
+    }
+    existingProduct = null;
     notifyListeners();
   }
 }
