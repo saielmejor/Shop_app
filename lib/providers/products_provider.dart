@@ -87,8 +87,8 @@ class Products with ChangeNotifier {
             isFavorite: prodData['isFavorite'],
             imageUrl: prodData['imageUrl']));
       });
-      _items = loadedProducts;
-      notifyListeners(); //execute a function for each id (the id of the product is the key ), prodData is the data inside the key
+       _items = loadedProducts;
+      notifyListeners();
     } catch (error) {
       throw (error);
     }

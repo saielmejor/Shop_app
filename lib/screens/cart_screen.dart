@@ -4,10 +4,10 @@ import '../providers/cart.dart'
     show Cart; // this means we are only interested with Cart Class
 import '../widgets/cart_item.dart';
 import '../providers/orders.dart';
-import '../screens/orders_screen.dart';
+
 
 class CartScreen extends StatelessWidget {
-  //create a routeName to access cart Scree n
+  //create a routeName to access cart Screen
 
   static const routeName = '/cart';
   @override
